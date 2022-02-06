@@ -26,7 +26,7 @@ function jdownloader() {
   // Declare variables
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   // var sheet = spreadsheet.getActiveSheet();
-  var sheet = spreadsheet.getSheetByName("User Saved Posts");
+  var sheet = spreadsheet.getSheetByName(USERNAME + " Saved Posts");
   var sheetRange = sheet.getDataRange();
   var sheetRangeValues = sheetRange.getDisplayValues();
   var headerRow = sheetRangeValues[0];
