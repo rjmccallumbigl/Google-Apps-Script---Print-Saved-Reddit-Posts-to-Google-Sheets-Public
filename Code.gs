@@ -1,11 +1,12 @@
 // Declare global variables
-var username = 'ryanmcslomo';
-var pwd = 'enter-password-here';
-var client_id = "enter-client-id-here";
-var client_secret = "enter-client-secret-here";
-var access_token_url = 'https://www.reddit.com/api/v1';
-var userAgent = "GoogleAppsScript/0.1 by " + username;
-var base = "https://oauth.reddit.com";
+var USERNAME = "enter-username-here";
+var PWD = "enter-password-here";
+var CLIENT_ID = "enter-client-id-here";
+var CLIENT_SECRET = "enter-client-secret-here";
+var ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1";
+var USERAGENT = "GoogleAppsScript/0.1 by " + USERNAME;
+var BASE = "https://oauth.reddit.com";
+
 
 /******************************************************************************************************
  * 
@@ -31,7 +32,7 @@ function getSavedRedditPosts() {
   //  Collect saved Reddit posts
   do {
     console.log("Getting saved Reddit posts (count: " + count + ")");
-    var resp = UrlFetchApp.fetch(base + "/user/" + username + "/saved" + "?after=" + afterValue + "&count=" + count, savedPostOptions);
+    var resp = UrlFetchApp.fetch(BASE + "/user/" + USERNAME + "/saved" + "?after=" + afterValue + "&count=" + count, savedPostOptions);
     var respText = resp.getContentText();
     respJSON = JSON.parse(respText);
     respJSONArray = respJSONArray.concat(respJSON.data.children);
@@ -41,7 +42,7 @@ function getSavedRedditPosts() {
   while (afterValue);
 
   // Print to sheet
-  setArraySheet(respJSONArray, username + " Saved Posts", spreadsheet);
+  setArraySheet(respJSONArray, USERNAME + " Saved Posts", spreadsheet);
 }
 
 /******************************************************************************************************
@@ -54,7 +55,7 @@ function deleteSavedRedditPosts() {
 
   // Declare variables
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = spreadsheet.getSheetByName(username + " Saved Posts");
+  var sheet = spreadsheet.getSheetByName(USERNAME + " Saved Posts");
   var sheetRange = sheet.getDataRange();
   var sheetRangeValues = sheetRange.getDisplayValues();
   var headerRow = sheetRangeValues[0];
@@ -66,10 +67,10 @@ function deleteSavedRedditPosts() {
   for (var x = 1; x < sheetRangeValues.length; x++) {
     if (sheetRangeValues[x][nameHeader]) {
       optionsArray.push({
-        'url': base + "/api/unsave",
+        'url': BASE + "/api/unsave",
         'headers': {
           "Authorization": "bearer " + redditToken,
-          "User-Agent": userAgent,
+          "User-Agent": USERAGENT,
         },
         'method': 'post',
         'payload': {
@@ -102,7 +103,7 @@ function getMyRedditAccount() {
   };
 
   //  Collect account info
-  var resp = UrlFetchApp.fetch(base + "/api/v1/me", accountOptions);
+  var resp = UrlFetchApp.fetch(BASE + "/api/v1/me", accountOptions);
   var respText = resp.getContentText();
   var respJSON = JSON.parse(respText);
 
@@ -127,7 +128,7 @@ function connectRedditAPI() {
 
   // Use the cache here so we're not constantly fetching the auth token
   var cache = CacheService.getDocumentCache();
-  var cacheKey = "REDDIT_CLIENT_ID=" + client_id;
+  var cacheKey = "REDDIT_CLIENT_ID=" + CLIENT_ID;
   var cached = cache.get(cacheKey);
   if (cached != null) {
     console.log("Returning cached token");
@@ -138,23 +139,23 @@ function connectRedditAPI() {
   var data = {
     // 'grant_type': 'client_credentials', // Does not work for certain commands, e.g. returning saved items
     'grant_type': 'password', // Does not work with 2FA enabled on account
-    'username': username,
-    'password': pwd,
+    'username': USERNAME,
+    'password': PWD,
     "response_type": "code",
   };
   var options = {
     'method': 'post',
     'payload': data,
     'headers': {
-      'Authorization': 'Basic ' + Utilities.base64Encode(client_id + ":" + client_secret),
-      "User-Agent": userAgent,
+      'Authorization': 'Basic ' + Utilities.base64Encode(CLIENT_ID + ":" + CLIENT_SECRET),
+      "User-Agent": USERAGENT,
     },
     muteHttpExceptions: true,
   };
 
   // Call API
   console.log("Getting new token");
-  var resp = UrlFetchApp.fetch(access_token_url + "/access_token", options);
+  var resp = UrlFetchApp.fetch(ACCESS_TOKEN_URL + "/access_token", options);
   var respJSON = JSON.parse(resp.getContentText());
   console.log(respJSON);
 
