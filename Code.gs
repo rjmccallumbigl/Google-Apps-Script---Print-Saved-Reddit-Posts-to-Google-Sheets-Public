@@ -47,6 +47,43 @@ function getSavedRedditPosts() {
 
 /******************************************************************************************************
  * 
+ * Grab subreddits from Reddit account and save them in a spreadsheet
+ * 
+ ******************************************************************************************************/
+
+function getSubreddits() {
+
+  // Declare variables
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  console.log(spreadsheet.getUrl());
+  var savedPostOptions = {
+    headers: {
+      "Authorization": "bearer " + connectRedditAPI(),
+    },
+  };
+  var afterValue = null;
+  var respJSON = {};
+  var respJSONArray = [];
+  var count = 0;
+
+  //  Collect subreddits
+  do {
+    console.log("Getting subreddits (count: " + count + ")");
+    var resp = UrlFetchApp.fetch(BASE + "/subreddits/mine/subscriber" + "?after=" + afterValue + "&count=" + count, savedPostOptions);
+    var respText = resp.getContentText();
+    respJSON = JSON.parse(respText);
+    respJSONArray = respJSONArray.concat(respJSON.data.children);
+    afterValue = respJSON.data.after;
+    count += respJSON.data.dist;
+  }
+  while (afterValue);
+
+  // Print to sheet
+  setArraySheet(respJSONArray, USERNAME + " Subreddits", spreadsheet);
+}
+
+/******************************************************************************************************
+ * 
  * Delete saved posts from Reddit
  * 
  ******************************************************************************************************/
