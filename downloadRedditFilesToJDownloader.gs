@@ -35,7 +35,12 @@ function jdownloader() {
   var subredditHeader = headerRow.indexOf("subreddit");
   var authorHeader = headerRow.indexOf("author");
   var crawljobID = "ID";
-  var crawljobFile = DriveApp.getFileById(crawljobID);
+  var date = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'M-d-yyyy');
+  try {
+    var crawljobFile = DriveApp.getFileById(crawljobID);
+  } catch (e) {
+    var crawljobFile = DriveApp.createFile(date + "_jdownloader.crawljob", date);
+  }
   var monitoringFolderID = "ID";
   var monitoringFolder = DriveApp.getFolderById(monitoringFolderID);
   var downloadFolder = "F:\\wallpapers";
