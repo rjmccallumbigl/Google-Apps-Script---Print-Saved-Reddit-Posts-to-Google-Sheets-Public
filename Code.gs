@@ -4,7 +4,7 @@ var PWD = "enter-password-here";
 var CLIENT_ID = "enter-client-id-here";
 var CLIENT_SECRET = "enter-client-secret-here";
 var ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1";
-var USERAGENT = "GoogleAppsScript/0.1 by " + USERNAME;
+var USERAGENT = "GoogleAppsScript/0.2 by " + USERNAME;
 var BASE = "https://oauth.reddit.com";
 
 
