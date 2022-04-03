@@ -42,7 +42,7 @@ function getSavedRedditPosts() {
   while (afterValue);
 
   // Print to sheet
-  setArraySheet(respJSONArray, USERNAME + " Saved Posts", spreadsheet);
+  setArraySheet(respJSONArray, USERNAME + " Saved Posts", spreadsheet, "data");
 }
 
 /******************************************************************************************************
@@ -79,7 +79,45 @@ function getSubreddits() {
   while (afterValue);
 
   // Print to sheet
-  setArraySheet(respJSONArray, USERNAME + " Subreddits", spreadsheet);
+  setArraySheet(respJSONArray, USERNAME + " Subreddits", spreadsheet, "data");
+}
+
+/******************************************************************************************************
+ * 
+ * Grab friends from Reddit account and save them in a spreadsheet
+ * 
+ ******************************************************************************************************/
+
+function getFriends() {
+
+  // Declare variables
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  console.log(spreadsheet.getUrl());
+  var savedPostOptions = {
+    headers: {
+      "Authorization": "bearer " + connectRedditAPI(),
+    },
+  };
+  var afterValue = null;
+  var respJSON = {};
+  var respJSONArray = [];
+  var count = 0;
+
+  //  Collect friends
+    var resp = UrlFetchApp.fetch(BASE + "/api/v1/me/friends" + "?after=" + afterValue + "&count=" + count, savedPostOptions);
+    var respText = resp.getContentText();
+    respJSON = JSON.parse(respText);
+    respJSONArray = respJSON.data.children;
+
+  //  Capture members from returned data
+    for(var x = 0; x < respJSONArray.length; x++){
+      // if (key == "name") {
+        respJSONArray[x]["name"] = "https://www.reddit.com/user/" + respJSONArray[x]["name"];
+      // }
+    }
+
+  // Print to sheet
+  setArraySheet(respJSONArray, USERNAME + " Friends", spreadsheet);
 }
 
 /******************************************************************************************************
