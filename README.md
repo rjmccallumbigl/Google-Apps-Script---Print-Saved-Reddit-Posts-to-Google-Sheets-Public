@@ -9,12 +9,12 @@ Steps (prereq: run getSavedRedditPosts() to populate Google Sheets with your Sav
 3. Create a folder in Google Drive called JDownloader. Configure this folder to always be available offline on your computer (go up a level, right click on JDownloader folder -> Offline access -> Available offline).
 4. Create a file called "GAS.crawljob". The name doesn't matter, but the extension does. 
 5. Save the ID of this file in var crawljobID. It is the long string in the URL: https://drive.google.com/open?id={ID}. 
-5. Create a subfolder in the JDownloader folder called Monitor. Save the ID of this folder in var monitoringFolderID.
-6. Set the name of your sheet in var sheet.
-7. [Optional] Specify your download folder in var downloadFolder.
-8. In JDownloader, activate the Folder Watch extension in Settings.
-9. Set your FolderWatch: Folders to your Google Drive folder like so: [ "G:\\My Drive\\Jdownloader\\monitor" ] (the default is %homepath%\AppData\Local\JDownloader 2.0\folderwatch).
-10. Your primary crawljob file will be in the Jdownloader folder. When you run this script, it will update the file and save a copy to the monitor subfolder, which will be processed by local JDownloader.
+6. Create a subfolder in the JDownloader folder called Monitor. Save the ID of this folder in var monitoringFolderID.
+7. Set the name of your sheet in var sheet.
+8. [Optional] Specify your download folder in var downloadFolder.
+9. In JDownloader, activate the Folder Watch extension in Settings.
+10. Set your FolderWatch: Folders to your Google Drive folder like so: [ "G:\\My Drive\\Jdownloader\\monitor" ] (the default is %homepath%\AppData\Local\JDownloader 2.0\folderwatch).
+11. Your primary crawljob file will be in the Jdownloader folder. When you run this script, it will update the file and save a copy to the monitor subfolder, which will be processed by local JDownloader.
 
 ## Sources
 https://support.jdownloader.org/Knowledgebase/Article/View/folder-watch-basic-usage
