@@ -7,7 +7,6 @@ var ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1";
 var USERAGENT = "GoogleAppsScript/0.2 by " + USERNAME;
 var BASE = "https://oauth.reddit.com";
 
-
 /******************************************************************************************************
  * 
  * Grab saved posts from Reddit and save them in a spreadsheet
@@ -42,7 +41,12 @@ function getSavedRedditPosts() {
   while (afterValue);
 
   // Print to sheet
-  setArraySheet(respJSONArray, USERNAME + " Saved Posts", spreadsheet, "data");
+  if (count > 0){
+    setArraySheet(respJSONArray, USERNAME + " Saved Posts", spreadsheet, "data");
+  } else {
+    console.log("No saved posts");
+  }
+  
 }
 
 /******************************************************************************************************
@@ -104,17 +108,17 @@ function getFriends() {
   var count = 0;
 
   //  Collect friends
-    var resp = UrlFetchApp.fetch(BASE + "/api/v1/me/friends" + "?after=" + afterValue + "&count=" + count, savedPostOptions);
-    var respText = resp.getContentText();
-    respJSON = JSON.parse(respText);
-    respJSONArray = respJSON.data.children;
+  var resp = UrlFetchApp.fetch(BASE + "/api/v1/me/friends" + "?after=" + afterValue + "&count=" + count, savedPostOptions);
+  var respText = resp.getContentText();
+  respJSON = JSON.parse(respText);
+  respJSONArray = respJSON.data.children;
 
   //  Capture members from returned data
-    for(var x = 0; x < respJSONArray.length; x++){
-      // if (key == "name") {
-        respJSONArray[x]["name"] = "https://www.reddit.com/user/" + respJSONArray[x]["name"];
-      // }
-    }
+  for (var x = 0; x < respJSONArray.length; x++) {
+    // if (key == "name") {
+    respJSONArray[x]["name"] = "https://www.reddit.com/user/" + respJSONArray[x]["name"];
+    // }
+  }
 
   // Print to sheet
   setArraySheet(respJSONArray, USERNAME + " Friends", spreadsheet);
@@ -152,11 +156,17 @@ function deleteSavedRedditPosts() {
           'id': sheetRangeValues[x][nameHeader] // name
         },
       });
+
+      // Batch array by 50 to avoid API limit (Exception: Service invoked too many times in a short time: urlfetch. Try Utilities.sleep(1000) between calls.)
+      if (optionsArray.length == 50) {
+
+        //  Delete saved Reddit posts
+        UrlFetchApp.fetchAll(optionsArray);
+        optionsArray = [];
+      }
     }
   }
 
-  //  Delete saved Reddit posts
-  UrlFetchApp.fetchAll(optionsArray);
   console.log("Deleted saved posts");
 }
 
