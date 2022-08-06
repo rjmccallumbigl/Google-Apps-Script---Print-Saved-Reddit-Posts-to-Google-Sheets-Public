@@ -84,6 +84,30 @@ function deleteRowsWithURLs() {
   // Set values  
   sheetRange = sheet.getRange(1, 1, newSheetContents.length, newSheetContents[0].length);
   sheetRange.setValues(newSheetContents);
+  
+  backupText(spreadsheet, newSheetContents);
+}
+
+/*********************************************************************************************************
+ *
+ * Copy text results to backup row
+ *
+ * @param {Object} spreadsheet The source spreadsheet
+ * @param {Array} newSheetContents The text only values from saved posts that need to be read manually
+ * 
+*********************************************************************************************************/
+
+function backupText(spreadsheet, newSheetContents) {
+
+  // var spreadsheet = spreadsheet || SpreadsheetApp.getActiveSpreadsheet();
+
+  // Copy to backup row
+  var backupSheet = spreadsheet.getSheetByName(USERNAME + " Saved Posts (old)");
+  for (var x = 1; x < newSheetContents.length; x++) {
+    backupSheet.appendRow(newSheetContents[x]);
+  }
+}
+
 }
 
 /*********************************************************************************************************
@@ -103,3 +127,4 @@ function onOpen() {
     .addItem("Get All Accounts I Follow", "getFriends")
     .addToUi();
 }
+
