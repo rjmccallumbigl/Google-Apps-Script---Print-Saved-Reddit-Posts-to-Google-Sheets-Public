@@ -82,18 +82,21 @@ function jdownloader() {
 
       // Determine file format, include source information
       if (url.indexOf("gfycat") > -1 || url.indexOf("redgifs") > -1) {
-        fileFormat = "mp4";
-        fileName = "Reddit - " + subreddit + " by " + author + " - " + title + "." + fileFormat;
-        packageName = "";
+        fileFormat = ".mp4";
+        fileName = "Reddit - " + subreddit + " by " + author + " - " + title;
+        fileName = sliceFileName(fileName) + fileFormat;
+        packageName = "vids";
         // Add vids to root folder
       } else if (videoResponseTextJSON.includes(fileExtension)) {
-        fileFormat = fileExtension;
-        fileName = "Reddit - " + subreddit + " by " + author + " - " + title + "." + fileFormat;
-        packageName = "";
+        fileFormat = "." + fileExtension;
+        fileName = "Reddit - " + subreddit + " by " + author + " - " + title;
+        fileName = sliceFileName(fileName) + fileFormat;
+        packageName = "vids";
         // Add pics to a picture subfolder (designated by the Jdownloader package)
       } else if (imageResponseTextJSON.includes(fileExtension)) {
-        fileFormat = fileExtension;
-        fileName = "Reddit - " + subreddit + " by " + author + " - " + title + "." + fileFormat;
+        fileFormat = "." + fileExtension;
+        fileName = "Reddit - " + subreddit + " by " + author + " - " + title;
+        fileName = sliceFileName(fileName) + fileFormat;
         packageName = "pics";
         // Otherwise let JDownloader handle it
       } else {
@@ -121,4 +124,25 @@ function jdownloader() {
 
   // Make a copy that will get processed by JDownloader on my local computer
   crawljobFile.makeCopy(monitoringFolder);
+}
+
+/******************************************************************************************************
+ * 
+ * Slice filenames with long titles so they don't go near the Windows file name char limit
+ * 
+ * @param {String} fileName The original file name
+ * 
+ * @return {String} Sliced file name
+ * 
+ ******************************************************************************************************/
+
+function sliceFileName(fileName) {
+
+  console.log("Before: " + fileName);
+  while (fileName.length > 240) {
+    fileName = fileName.slice(0, -20) + fileFormat;
+    console.log("After: " + fileName);
+  }
+  console.log("Final: " + fileName);
+  return fileName;
 }

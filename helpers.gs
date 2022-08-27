@@ -84,7 +84,7 @@ function deleteRowsWithURLs() {
   // Set values  
   sheetRange = sheet.getRange(1, 1, newSheetContents.length, newSheetContents[0].length);
   sheetRange.setValues(newSheetContents);
-  
+
   backupText(spreadsheet, newSheetContents);
 }
 
@@ -108,8 +108,6 @@ function backupText(spreadsheet, newSheetContents) {
   }
 }
 
-}
-
 /*********************************************************************************************************
 *
 * Update Google Sheet menu allowing script to be run from the spreadsheet.
@@ -118,6 +116,8 @@ function backupText(spreadsheet, newSheetContents) {
 
 function onOpen() {
   SpreadsheetApp.getUi().createMenu("Functions")
+    .addItem("Run All Functions", "main")
+    .addSeparator()
     .addItem("Grab Saved Posts From Reddit", "getSavedRedditPosts")
     .addItem("Delete Saved Posts From Reddit", "deleteSavedRedditPosts")
     .addItem("Pass to jDownloader from Google Drive", "jdownloader")
